@@ -1,3 +1,5 @@
+import web3
+
 class EVMData():
     def __init__(self):
         self.opcode_dict = {
@@ -739,7 +741,7 @@ class EVMData():
         return stack, storage, memory, event
 
     def Byte(self, global_variables, stack, storage, memory):
-        # Get the 2 values to add from the stack
+        # Get the 2 values from the stack
         i = stack.pop()
         x = stack.pop()
         # Convert the hex strings to integer
@@ -756,17 +758,80 @@ class EVMData():
         return stack, storage, memory, event
 
     def shl(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        shift = stack.pop()
+        value = stack.pop()
+        # Convert the hex strings to integer
+        shift = int(shift, 16)
+        value = int(value, 16)
+        event = ""
+
+        if(shift >= 256):
+            result = 0
+        else:
+            result = (value << shift) & ((2**256) - 1)
+        # Convert the int to a 32 byte hex string
+        stack.append(format(result, "064x"))
+        return stack, storage, memory, event
 
     def shr(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        shift = stack.pop()
+        value = stack.pop()
+        # Convert the hex strings to integer
+        shift = int(shift, 16)
+        value = int(value, 16)
+        event = ""
+
+        if(shift >= 256):
+            result = 0
+        else:
+            result = (value >> shift) & ((2**256) - 1)
+        # Convert the int to a 32 byte hex string
+        stack.append(format(result, "064x"))
+        return stack, storage, memory, event
 
     def sar(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        shift = stack.pop()
+        value = stack.pop()
+        # Convert the hex strings to integer
+        shift = int(shift, 16)
+        value = int(value, 16)
+        event = ""
+        
+        # Turn ints into 2's complement
+        if(value < 2**255):
+            pass
+        else:  # AKA the MSB is 1, so it's a signed number
+            value = value - 2**256
+ 
+        if(shift >= 256):
+            if(value >= 0):
+                result = 0
+            else:
+                result = (2**255) - 1
+        else:
+            result = (value >> shift) & ((2**256) - 1)
+        # Convert the int to a 32 byte hex string
+        stack.append(format(result, "064x"))
+        return stack, storage, memory, event
 
     # SHA
     def sha3(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        offset = stack.pop()
+        size = stack.pop()
+        # Convert the hex strings to integer
+        offset = int(offset, 16)
+        size = int(size, 16)
+        event = ""
+        
+        web3.Web3.keccak(hexstr="FFFFFFFF").hex()[2:]
+        
+        # Convert the int to a 32 byte hex string
+        stack.append(format(result, "064x"))
+        return stack, storage, memory, event
 
     # Environment Information
     def address(self, global_variables, stack, storage, memory):
