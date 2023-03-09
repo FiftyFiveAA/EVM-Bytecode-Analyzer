@@ -180,157 +180,6 @@ class EVMData():
             0xFF: "selfdestruct",
         }
 
-        self.stack_diffs = {
-            "create": -2,
-            "create2": -3,
-            "invalid": None,
-            "add": -1,
-            "addmod": -2,
-            "sub": -1,
-            "mod": -1,
-            "smod": -1,
-            "mul": -1,
-            "mulmod": -2,
-            "div": -1,
-            "sdiv": -1,
-            "exp": -1,
-            "signextend": -1,
-            "shl": -1,
-            "shr": -1,
-            "sar": -1,
-            "blockhash": 0,
-            "coinbase": 1,
-            "selfdestruct": -1,
-            "timestamp": 1,
-            "number": 1,
-            "difficulty": 1,
-            "gaslimit": 1,
-            "lt": -1,
-            "gt": -1,
-            "slt": -1,
-            "sgt": -1,
-            "eq": -1,
-            "iszero": 0,
-            "and": -1,
-            "or": -1,
-            "xor": -1,
-            "not": 0,
-            "byte": -1,
-            "balance": 0,
-            "origin": 1,
-            "address": 1,
-            "selfbalance": 1,
-            "chainid": 1,
-            "call": -6,
-            "callcode": -6,
-            "delegatecall": -5,
-            "staticcall": -5,
-            "caller": 1,
-            "callvalue": 1,
-            "calldataload": 0,
-            "calldatasize": 1,
-            "calldatacopy": -3,
-            "codesize": 1,
-            "codecopy": -3,
-            "gasprice": 1,
-            "extcodesize": 0,
-            "extcodehash": 0,
-            "extcodecopy": -4,
-            "returndatasize": 1,
-            "returndatacopy": -3,
-            "dup_XX": 1,
-            "stop": 0,
-            "jump": -1,
-            "jumpi": -2,
-            "jumpdest": 0,
-            "pc": 1,
-            "gas": 1,
-            "log0": -2,
-            "log1": -3,
-            "log2": -4,
-            "log3": -5,
-            "log4": -6,
-            "mstore": -2,
-            "mstore8": -2,
-            "mload": 0,
-            "msize": 1,
-            "sha3": -1,
-            "pop": -1,
-            "push_XX": 1,
-            "sstore": -2,
-            "sload": 0,
-            "return": -2,
-            "revert": -2,
-            "assert_fail": 0,
-            "push": 1,
-            "dup": 1,
-            "swap": 0,
-            "push1": 1,
-            "push2": 1,
-            "push3": 1,
-            "push4": 1,
-            "push5": 1,
-            "push6": 1,
-            "push7": 1,
-            "push8": 1,
-            "push9": 1,
-            "push10": 1,
-            "push11": 1,
-            "push12": 1,
-            "push13": 1,
-            "push14": 1,
-            "push15": 1,
-            "push16": 1,
-            "push17": 1,
-            "push18": 1,
-            "push19": 1,
-            "push20": 1,
-            "push21": 1,
-            "push22": 1,
-            "push23": 1,
-            "push24": 1,
-            "push25": 1,
-            "push26": 1,
-            "push27": 1,
-            "push28": 1,
-            "push29": 1,
-            "push30": 1,
-            "push31": 1,
-            "push32": 1,
-            "dup1": 1,
-            "swap1": 0,
-            "dup2": 1,
-            "swap2": 0,
-            "dup3": 1,
-            "swap3": 0,
-            "dup4": 1,
-            "swap4": 0,
-            "dup5": 1,
-            "swap5": 0,
-            "dup6": 1,
-            "swap6": 0,
-            "dup7": 1,
-            "swap7": 0,
-            "dup8": 1,
-            "swap8": 0,
-            "dup9": 1,
-            "swap9": 0,
-            "dup10": 1,
-            "swap10": 0,
-            "dup11": 1,
-            "swap11": 0,
-            "dup12": 1,
-            "swap12": 0,
-            "dup13": 1,
-            "swap13": 0,
-            "dup14": 1,
-            "swap14": 0,
-            "dup15": 1,
-            "swap15": 0,
-            "dup16": 1,
-            "swap16": 0,
-        }
-
     def fromHexString(self, value):
         return bytes.fromhex(value)
 
@@ -352,7 +201,7 @@ class EVMData():
         # Check if there was an int overflow
         overflow = ""
         if((int(a, 16) + int(b, 16)) > (2**256)-1):
-            overflow = "overflow"
+            overflow = "overflow add"
         # Convert the int to a 32 byte hex string
         stack.append(format(result, "064x"))
         return stack, storage, memory, overflow
@@ -367,7 +216,7 @@ class EVMData():
         # Check if there was an int overflow
         overflow = ""
         if((int(a, 16) * int(b, 16)) > (2**256)-1):
-            overflow = "overflow"
+            overflow = "overflow mul"
         # Convert the int to a 32 byte hex string
         stack.append(format(result, "064x"))
         return stack, storage, memory, overflow
@@ -382,7 +231,7 @@ class EVMData():
         # Check if there was an int overflow
         underflow = ""
         if((int(a, 16) - int(b, 16)) < 0):
-            underflow = "underflow"
+            underflow = "underflow sub"
         # Convert the int to a 32 byte hex string
         stack.append(format(result, "064x"))
         return stack, storage, memory, underflow
@@ -415,7 +264,7 @@ class EVMData():
         # If the denominator is 0, then return 0
         if(b == 0):
             result = 0
-            event = "Signed division by 0 returns 0"
+            event = "signed division by 0 returns 0"
         else:
             # Turn ints into 2's complement
             if(a < 2**255):
@@ -533,7 +382,7 @@ class EVMData():
         # Check if there was an int overflow
         overflow = ""
         if((int(a, 16) ** int(b, 16)) > (2**256)-1):
-            overflow = "overflow"
+            overflow = "overflow exp"
         # Convert the int to a 32 byte hex string
         stack.append(format(result, "064x"))
         return stack, storage, memory, overflow
@@ -823,192 +672,763 @@ class EVMData():
         offset = stack.pop()
         size = stack.pop()
         # Convert the hex strings to integer
-        offset = int(offset, 16)
         size = int(size, 16)
         event = ""
-        
-        web3.Web3.keccak(hexstr="FFFFFFFF").hex()[2:]
+
+        if(size > 32):  # assume the size can not be greater than 32
+            result = "00".zfill(64)
+            event = "SHA3 called with size > 32"
+        else:
+            data = memory[offset]
+            data = data[-size*2:]  # get the least significant bytes
+            result = web3.Web3.keccak(hexstr=data).hex()[2:]
         
         # Convert the int to a 32 byte hex string
-        stack.append(format(result, "064x"))
+        stack.append(result)
         return stack, storage, memory, event
 
     # Environment Information
     def address(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the contract's address
+        event = ""
+        contract_address = global_variables["contract.address"][2:].zfill(64)
+        # add it to the stack
+        stack.append(contract_address)
+        return stack, storage, memory, event
 
     def balance(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the 1 value from the stack
+        address = stack.pop()
+        event = ""
+
+        # remove the 0x if the address starts w/ that
+        if(address[0:2] == "0x"):
+            address = address[2:]
+
+        # Make sure it's 32 bytes long
+        address = address.zfill(64)
+        # get the balance of the address
+        try:
+            balance = int(global_variables["balances"][address])
+        except:
+            balance = 0
+
+        # add the result to the stack
+        stack.append(format(balance, "064x"))
+        return stack, storage, memory, event
 
     def origin(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the contract's origin
+        event = ""
+        tx_origin = global_variables["tx.origin"][2:].zfill(64)
+        # add it to the stack
+        stack.append(tx_origin)
+        return stack, storage, memory, event
 
     def caller(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the contract's origin
+        event = ""
+        caller = global_variables["msg.sender"][2:].zfill(64)
+        # add it to the stack
+        stack.append(caller)
+        return stack, storage, memory, event
 
     def callvalue(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the value sent to the contract
+        event = ""
+        call_value = int(global_variables["msg.value"])
+        
+        # add it to the stack
+        stack.append(format(call_value, "064x"))
+        return stack, storage, memory, event
 
     def calldataload(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the offset argument
+        offset = stack.pop()
+        event = ""
+
+        offset = int(offset, 16)
+
+        calldata = global_variables["calldata"]
+        # if calldata is empty then just return 0s
+        if(calldata == ""):
+            calldata = "00".zfill(64)
+        else:
+            # if calldata starts w/ 0x then remove it
+            if(calldata[:2] == "0x"):  
+                calldata = calldata[2:]
+
+            # get 32 bytes of the calldata starting at the provided offset
+            # Check if the 32 bytes extend past the end of our value
+
+            # multiply offset by 2 because it's a byte offset and we are using a hex string which is 2 characters ber byte
+            if((offset*2)+64 > len(calldata)):
+                calldata = calldata[(offset*2):]
+                # pad the right side w/ zeros
+                # this is just some trickiness to do that
+                calldata = calldata[::-1].zfill(64)[::-1]
+            # elif the offset is just larger than our data return 00s
+            elif((offset*2) > len(calldata)):
+                calldata = "00".zfill(64)
+            else:
+                # normal scenario
+                calldata = calldata[(offset*2):(offset*2)+64]
+
+        # add it to the stack
+        stack.append(calldata)
+        return stack, storage, memory, event
 
     def calldatasize(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the calldata global variable
+        calldata = global_variables["calldata"]
+        event = ""
+
+        # remove the "0x" if it exists
+        if(calldata[:2] == "0x"):
+            calldata = calldata[2:]
+
+        # get the length of the calldata in bytes
+        size = int(len(calldata) / 2)
+
+        # add it to the stack
+        stack.append(format(size, "064x"))
+        return stack, storage, memory, event
 
     def calldatacopy(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        destOffset = stack.pop()
+        offset = stack.pop()
+        size = stack.pop()
+        event = ""
+
+        calldata = global_variables["calldata"]
+
+        # get the required bytes from calldata
+        size = int(size, 16)
+        offset = int(offset, 16)
+
+        # if calldata is empty then just return 0s
+        if(calldata == ""):
+            calldata = "00".zfill(64)
+        else:
+            # if calldata starts w/ 0x then remove it
+            if(calldata[:2] == "0x"):  
+                calldata = calldata[2:]
+
+            # get 32 bytes of the calldata starting at the provided offset
+            # Check if the 32 bytes extend past the end of our value
+
+            # multiply offset by 2 because it's a byte offset and we are using a hex string which is 2 characters ber byte
+            if((offset*2)+64 > len(calldata)):
+                calldata = calldata[(offset*2):]
+                # pad the right side w/ zeros
+                # this is just some trickiness to do that
+                calldata = calldata[::-1].zfill(64)[::-1]
+            # elif the offset is just larger than our data return 00s
+            elif((offset*2) > len(calldata)):
+                calldata = "00".zfill(64)
+            else:
+                # normal scenario
+                calldata = calldata[(offset*2):(offset*2)+64]
+
+        # just get the need bytes of calldata
+        calldata = calldata[:(size*2)]
+
+        # copy them to memory
+        destOffset = int(destOffset, 16)
+        destOffset = format(destOffset, "064x")
+
+        # if there's stuff in the memory address
+        if(destOffset in memory.keys()):
+            # replace the first few bytes but keep the rest
+            memory[destOffset] = calldata + memory[destOffset][len(calldata):]
+        else:
+            memory[destOffset] = calldata
+        
+        return stack, storage, memory, event
 
     def codesize(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the contract's bytecode
+        event = ""
+        codesize = global_variables["bytecode"]
+        codesize = int(len(codesize)/2)
+
+        stack.append(format(codesize, "064x"))
+        return stack, storage, memory, event
 
     def codecopy(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        destOffset = stack.pop()
+        offset = stack.pop()
+        size = stack.pop()
+        event = ""
+
+        code = global_variables["bytecode"]
+
+        # get the required bytes from calldata
+        size = int(size, 16)
+        offset = int(offset, 16)
+
+        # if calldata is empty then just return 0s
+        if(code == ""):
+            code = "00".zfill(64)
+        else:
+            # if calldata starts w/ 0x then remove it
+            if(code[:2] == "0x"):  
+                code = code[2:]
+
+            # get 32 bytes of the calldata starting at the provided offset
+            # Check if the 32 bytes extend past the end of our value
+
+            # multiply offset by 2 because it's a byte offset and we are using a hex string which is 2 characters ber byte
+            if((offset*2)+64 > len(code)):
+                code = code[(offset*2):]
+                # pad the right side w/ zeros
+                # this is just some trickiness to do that
+                code = code[::-1].zfill(64)[::-1]
+            # elif the offset is just larger than our data return 00s
+            elif((offset*2) > len(code)):
+                code = "00".zfill(64)
+            else:
+                # normal scenario
+                code = code[(offset*2):(offset*2)+64]
+
+        # just get the needed bytes of calldata
+        code = code[:(size*2)]
+
+        # copy them to memory
+        destOffset = int(destOffset, 16)
+        destOffset = format(destOffset, "064x")
+
+        # if there's stuff in the memory address
+        if(destOffset in memory.keys()):
+            # replace the first few bytes but keep the rest
+            memory[destOffset] = code + memory[destOffset][len(code):]
+        else:
+            memory[destOffset] = code
+        
+        return stack, storage, memory, event
 
     def gasprice(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+
+        gasprice = int(global_variables["gas.price"])
+
+        stack.append(format(gasprice, "064x"))
+        return stack, storage, memory, event
 
     def extcodesize(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the contract's bytecode
+        extcode_address = stack.pop()
+        extcode_address = "0x" + extcode_address
+        event = ""
+        try:
+            codesize = global_variables["extcode"][extcode_address]
+            codesize = int(len(codesize)/2)
+        except:
+            codesize = 0
+
+        stack.append(format(codesize, "064x"))
+        return stack, storage, memory, event
+
 
     def extcodecopy(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        extcode_address = stack.pop()
+        extcode_address = "0x" + extcode_address
+        destOffset = stack.pop()
+        offset = stack.pop()
+        size = stack.pop()
+        event = ""
+
+        try:
+            code = global_variables["extcode"][extcode_address]
+        except:
+            code = ""
+
+        # get the required bytes from calldata
+        size = int(size, 16)
+        offset = int(offset, 16)
+
+        # if calldata is empty then just return 0s
+        if(code == ""):
+            code = "00".zfill(64)
+        else:
+            # if calldata starts w/ 0x then remove it
+            if(code[:2] == "0x"):  
+                code = code[2:]
+
+            # get 32 bytes of the calldata starting at the provided offset
+            # Check if the 32 bytes extend past the end of our value
+
+            # multiply offset by 2 because it's a byte offset and we are using a hex string which is 2 characters ber byte
+            if((offset*2)+64 > len(code)):
+                code = code[(offset*2):]
+                # pad the right side w/ zeros
+                # this is just some trickiness to do that
+                code = code[::-1].zfill(64)[::-1]
+            # elif the offset is just larger than our data return 00s
+            elif((offset*2) > len(code)):
+                code = "00".zfill(64)
+            else:
+                # normal scenario
+                code = code[(offset*2):(offset*2)+64]
+
+        # just get the needed bytes of calldata
+        code = code[:(size*2)]
+
+        # copy them to memory
+        destOffset = int(destOffset, 16)
+        destOffset = format(destOffset, "064x")
+
+        # if there's stuff in the memory address
+        if(destOffset in memory.keys()):
+            # replace the first few bytes but keep the rest
+            memory[destOffset] = code + memory[destOffset][len(code):]
+        else:
+            memory[destOffset] = code
+        
+        return stack, storage, memory, event
+
 
     def returndatasize(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def returndatacopy(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def extcodehash(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the target address
+        address = stack.pop()
+        event = ""
+
+        try:
+            extcode = global_variables[address]
+            result = web3.Web3.keccak(hexstr=extcode).hex()
+        except:
+            result = format(0, "064x")
+            event = "extcodehash returns 0"
+        
+        # Convert the int to a 32 byte hex string
+        stack.append(result)
+        return stack, storage, memory, event
 
     # Block Information
     def blockhash(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the block hash
+        event = ""
+        blockhash = global_variables["block.hash"][2:].zfill(64)
+        # add it to the stack
+        stack.append(blockhash)
+        return stack, storage, memory, event
 
     def coinbase(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the block miner's address
+        event = ""
+        miners_addr = global_variables["block.coinbase"][2:].zfill(64)
+        # add it to the stack
+        stack.append(miners_addr)
+        return stack, storage, memory, event
 
     def timestamp(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the block timestamp
+        event = ""
+        timestamp = int(global_variables["block.timestamp"])
+        # add it to the stack
+        stack.append(format(timestamp, "064x"))
+        return stack, storage, memory, event
 
     def number(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the block number
+        event = ""
+        block_num = int(global_variables["block.number"])
+        # add it to the stack
+        stack.append(format(block_num, "064x"))
+        return stack, storage, memory, event
 
     def difficulty(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the difficulty
+        event = ""
+        difficulty = int(global_variables["block.difficulty"])
+        # add it to the stack
+        stack.append(format(difficulty, "064x"))
+        return stack, storage, memory, event
 
     def gaslimit(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the gas limit
+        event = ""
+        gas_limit = int(global_variables["block.gaslimit"])
+        # add it to the stack
+        stack.append(format(gas_limit, "064x"))
+        return stack, storage, memory, event
 
     def chainid(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the chain id
+        event = ""
+        chain_id = int(global_variables["block.chainid"])
+        # add it to the stack
+        stack.append(format(chain_id, "064x"))
+        return stack, storage, memory, event
 
     def selfbalance(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # get the contract's balance
+        event = ""
+        try:
+            contract_balance = int(global_variables["balances"][global_variables["contract.address"]])
+        except:
+            contract_balance = 0
+        # add it to the stack
+        stack.append(format(contract_balance, "064x"))
+        return stack, storage, memory, event
 
     # Stack, Memory, Storage and Flow Operations
     def pop(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        # just pop a value off the stack
+        value = stack.pop()
+        return stack, storage, memory, event
 
     def mload(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the offset from the stack
+        offset = stack.pop()
+
+        # Get the value from memory, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = memory[offset]
+        except:
+            value = "00"
+
+        event = ""
+
+        value = value.zfill(64)
+        stack.append(value)
+        
+        return stack, storage, memory, event
 
     def mstore(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        offset = stack.pop()
+        value = stack.pop()
+
+        event = ""
+
+        # Update value in memory dict
+        memory[offset] = value.zfill(64)
+        
+        return stack, storage, memory, event
 
     def mstore8(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        offset = stack.pop()
+        value = stack.pop()
+
+        # Get the least significant byte and store that in memory
+        lsb = value[-2:]
+        event = ""
+
+        # Update value in memory dict
+        memory[offset] = lsb.zfill(64)
+        
+        return stack, storage, memory, event
 
     def sload(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the offset from the stack
+        slot = stack.pop()
+
+        # Get the value from storage, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = storage[slot]
+        except:
+            value = "00"
+
+        event = ""
+
+        value = value.zfill(64)
+        stack.append(value)
+        
+        return stack, storage, memory, event
 
     def sstore(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Get the 2 values from the stack
+        slot = stack.pop()
+        value = stack.pop()
 
-    def jump(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
 
-    def jumpi(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        # Update value in storage dict
+        storage[slot] = value.zfill(64)
+        
+        return stack, storage, memory, event
 
-    def pc(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+    def jump(self, pc, instructions, global_variables, stack, storage, memory):
+        event = ""
+        offset = stack.pop()
+        offset = int(offset, 16)
+        if(str(offset) in instructions):
+            # make sure destination is jumpdest
+            if(instructions[str(offset)][0] == "jumpdest"):
+                pc = offset
+        else:
+            event = "invalid jump"
+            
+        return pc, stack, storage, memory, event
+
+    def jumpi(self, pc, instructions, global_variables, stack, storage, memory):
+        # Check if 2nd arg is != 0
+        event = ""
+        offset = stack.pop()
+        condition = stack.pop()  # if not 0, then jump
+        offset = int(offset, 16)
+        condition = int(condition, 16)
+        if(condition != 0):
+            # condition != 0 so jump
+            if(str(offset) in instructions):
+                # make sure destination is jumpdest
+                if(instructions[str(offset)][0] == "jumpdest"):
+                    pc = offset
+            else:
+                event = "invalid jump"
+        else:
+            # condition = 0 so just go onto next instruction
+            pc += 1
+            
+        return pc, stack, storage, memory, event
+
+    def pc(self, pc, global_variables, stack, storage, memory):
+        # Code in runBytecode method
+        event = ""
+        stack.append(format(pc, "064x"))
+        return stack, storage, memory, event
 
     def msize(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        memory_addresses = memory.keys()
+        largest_value = 0
+        # get the largest memory address and return that
+        for address in memory_addresses:
+            value = int(address, 16)
+            if(value > largest_value):
+                largest_value = value
+        stack.append(format(largest_value, "064x"))
+        return stack, storage, memory, event
 
     def gas(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        stack.append(format(global_variables["gas"], "064x"))
+        return stack, storage, memory, event
 
     def jumpdest(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     # Push Operations
     def push(self, n, global_variables, stack, storage, memory):
+        event = ""
         stack.append(n.zfill(64))
         #print("stack", stack, "\n")
-        return stack, storage, memory
+        return stack, storage, memory, event
 
     # Duplicate Operations
     def dup(self, n, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        stack.append(stack[-n])
+        
+        return stack, storage, memory, event
 
     # Exchange Operations
     def swap(self, n, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        stack[-1], stack[-1 - n] = stack[-1 - n], stack[-1]
+        return stack, storage, memory, event
 
     # Logging
     def log0(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = "log0"
+        # Get the offset from the stack
+        offset = stack.pop()
+        size = stack.pop()
+        size = int(size, 16)
+
+        # Get the value from memory, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = memory[offset]
+            if(size > 32):  # assume the size can not be greater than 32
+                result = "00".zfill(64)
+                event = "LOG called with size > 32"
+            else:
+                value = value[-size*2:]  # get the least significant bytes
+        except:
+            value = "00"
+
+        value = value.zfill(64)
+        # What to do with this?
+        
+        return stack, storage, memory, event
 
     def log1(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = "log1"
+        # Get the offset from the stack
+        offset = stack.pop()
+        size = stack.pop()
+        size = int(size, 16)
+        topic = stack.pop()
+
+        # Get the value from memory, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = memory[offset]
+            if(size > 32):  # assume the size can not be greater than 32
+                result = "00".zfill(64)
+                event = "LOG called with size > 32"
+            else:
+                value = value[-size*2:]  # get the least significant bytes
+        except:
+            value = "00"
+
+        value = value.zfill(64)
+        # topic
+        # What to do with this?
+
+        return stack, storage, memory, event
 
     def log2(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = "log2"
+        # Get the offset from the stack
+        offset = stack.pop()
+        size = stack.pop()
+        size = int(size, 16)
+        topic = stack.pop()
+        topic2 = stack.pop()
+
+        # Get the value from memory, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = memory[offset]
+            if(size > 32):  # assume the size can not be greater than 32
+                result = "00".zfill(64)
+                event = "LOG called with size > 32"
+            else:
+                value = value[-size*2:]  # get the least significant bytes
+        except:
+            value = "00"
+
+        value = value.zfill(64)
+        # topic
+        # topic2
+        # What to do with this?
+        
+        return stack, storage, memory, event
 
     def log3(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = "log3"
+        # Get the offset from the stack
+        offset = stack.pop()
+        size = stack.pop()
+        size = int(size, 16)
+        topic = stack.pop()
+        topic2 = stack.pop()
+        topic3 = stack.pop()
+
+        # Get the value from memory, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = memory[offset]
+            if(size > 32):  # assume the size can not be greater than 32
+                result = "00".zfill(64)
+                event = "LOG called with size > 32"
+            else:
+                value = value[-size*2:]  # get the least significant bytes
+        except:
+            value = "00"
+
+        value = value.zfill(64)
+        # topic
+        # topic2
+        # topic3
+        # What to do with this?
+        
+        return stack, storage, memory, event
 
     def log4(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = "log4"
+        # Get the offset from the stack
+        offset = stack.pop()
+        size = stack.pop()
+        size = int(size, 16)
+        topic = stack.pop()
+        topic2 = stack.pop()
+        topic3 = stack.pop()
+        topic4 = stack.pop()
+
+        # Get the value from memory, if it doesn't exist
+        # in the dict then just return zeros
+        try:
+            value = memory[offset]
+            if(size > 32):  # assume the size can not be greater than 32
+                result = "00".zfill(64)
+                event = "LOG called with size > 32"
+            else:
+                value = value[-size*2:]  # get the least significant bytes
+        except:
+            value = "00"
+
+        value = value.zfill(64)
+        # topic
+        # topic2
+        # topic3
+        # topic4
+        # What to do with this?
+        
+        return stack, storage, memory, event
 
     # System
     def create(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def call(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def callcode(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def Return(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def delegatecall(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def create2(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def staticcall(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def revert(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def invalid(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
     def selfdestruct(self, global_variables, stack, storage, memory):
-        return stack, storage, memory
+        event = ""
+        return stack, storage, memory, event
 
 
-    def opcode_func(self, instruction, global_variables, stack, storage, memory):
+    def opcode_func(self, pc, instructions, instruction, global_variables, stack, storage, memory):
         #print(instruction)
         event = ""
+
         # Stop and Arithmetic
         if(instruction == "stop"):
             stack, storage, memory, event = self.stop(global_variables, stack, storage, memory)
@@ -1135,11 +1555,15 @@ class EVMData():
         elif(instruction == "sstore"):
             stack, storage, memory, event = self.sstore(global_variables, stack, storage, memory)
         elif(instruction == "jump"):
-            stack, storage, memory, event = self.jump(global_variables, stack, storage, memory)
+            pc, stack, storage, memory, event = self.jump(pc, instructions, global_variables, stack, storage, memory)
+            # Return here so the program counter isn't incremented
+            return pc, stack, storage, memory, event
         elif(instruction == "jumpi"):
-            stack, storage, memory, event = self.jumpi(global_variables, stack, storage, memory)
+            pc, stack, storage, memory, event = self.jumpi(pc, instructions, global_variables, stack, storage, memory)
+            # Return here so the program counter isn't incremented
+            return pc, stack, storage, memory, event
         elif(instruction == "pc"):
-            stack, storage, memory, event = self.pc(global_variables, stack, storage, memory)
+            stack, storage, memory, event = self.pc(pc, global_variables, stack, storage, memory)
         elif(instruction == "msize"):
             stack, storage, memory, event = self.msize(global_variables, stack, storage, memory)
         elif(instruction == "gas"):
@@ -1150,6 +1574,11 @@ class EVMData():
         # PUSH operations
         elif("push" in instruction):
             stack, storage, memory, event = self.push(instruction.split(" ")[1], global_variables, stack, storage, memory)
+            # push instructions can be more than 1 byte
+            # so modify the program counter here
+            inc = int(len(instructions[str(pc)][1])/2)
+            pc += inc
+            return pc, stack, storage, memory, event
 
         # DUP operations
         elif("dup" in instruction):
@@ -1193,6 +1622,7 @@ class EVMData():
         elif(instruction == "selfdestruct"):
             stack, storage, memory, event = self.selfdestruct(global_variables, stack, storage, memory)
 
-
-        return stack, storage, memory, event
+        # increment the program counter
+        pc += 1
+        return pc, stack, storage, memory, event
 
