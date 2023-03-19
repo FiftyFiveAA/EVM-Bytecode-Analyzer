@@ -1,0 +1,490 @@
+openapi: 3.0.3
+info:
+  title: EVM Bytecode Analyzer API
+  description: This is the API for interacting with the EVM Bytecode Analyzer. The Disassembly section allows you to convert EVM bytecode to human readable instructions. The Debugger section allows you execute EVM bytecode and modify data during execution. The fuzzer section will be coming soon!
+  license:
+    name: GNU General Public License v3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+servers:
+  - url: https://localhost:12345/api/v1
+tags:
+  - name: Disassembly
+    description: EVM bytecode -> Human Readable Instructions
+  - name: Debugger
+    description: Execute EVM bytecode
+  - name: Fuzzer
+    description: Fuzz inputs to contracts
+
+paths:
+
+  /runBytecode:
+    post:
+      tags:
+        - Debugger
+      summary: Run the bytecode
+      description: Execute the contract, if breakpoints are set then it will return after a breakpoint is reached. Otherwise, it will attempt to execute the entire contract.
+      parameters:
+        - name: instructions
+          in: query
+          description: dict of EVM instructions returned by the /parseBytecode endpoint
+          required: true
+          schema:
+              $ref: '#/components/schemas/parseBytecodeResponse'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/runBytecode'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/runBytecodeResponse'
+ 
+  /globalVariables:
+    get:
+      tags:
+        - Debugger
+      summary: Get current contract's global variables
+      description: Return the contract's global variables. It is a dictionary of various values which are utilized by instructions. 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/globalVariables'
+    post:
+      tags:
+        - Debugger
+      summary: Modify the current contract's memory
+      description: Modifies the contract's global variables. For simplicity, most of the internals of this EVM implementation rely on 32 byte hexstrings so some of the global variables will also be in that format. If you want to update just one global variable at a time you can also do that.
+      parameters:
+        - name: stack
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/globalVariables'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/globalVariables'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/globalVariables'
+                
+  /parseBytecode:
+    post:
+      tags:
+        - Disassembly
+      summary: Convert bytecode into human readable EVM instructions
+      description:  Convert a hexstring of EVM bytecode into human readable EVM instructions.
+      parameters:
+        - name: bytecode
+          in: query
+          description: hex string of EVM bytecode
+          required: true
+          schema:
+            type: string
+            example: 60806040526000340361001157600080fd5b610206806100206000396000f3fe60806040526004361061001e5760003560e01c8063a30da70d14610023575b600080fd5b61002b61002d565b005b610035610106565b610070816000019067ffffffffffffffff16908167ffffffffffffffff168152505034815101815261006d816000015163ffffffff16565b50565b61007861007a565b565b600034146100bd576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100b490610181565b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff166108fc479081150290604051600060405180830381858888f19350505050158015610103573d6000803e3d6000fd5b50565b604051806020016040528061011a81525090565b6101226101a1565b565b600082825260208201905092915050565b7f646f6e742073656e642066756e64732100000000000000000000000000000000600082015250565b600061016b601083610124565b915061017682610135565b602082019050919050565b6000602082019050818103600083015261019a8161015e565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052605160045260246000fdfea26469706673582212202984a32427ae50c08b30f852a00a90f1afccf0ee5e5ceeb78f8227cdb1ec28ad64736f6c63430008110033
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/parseBytecode'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/parseBytecodeResponse'
+  
+  /breakpoints:
+    get:
+      tags:
+        - Debugger
+      summary: Get breakpoints
+      description: Get the list of breakpoints to use for the next time the /runBytecode endpoint is hit
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/breakpoints'
+    post:
+      tags:
+        - Debugger
+      summary: Set breakpoints
+      description: Send a list of breakpoints to use for the next time the /runBytecode endpoint is hit
+      parameters:
+        - name: breakpoints
+          in: query
+          description: list of breakpoints. Breakpoints are integers which represent offsets into the bytecode. There is one exception "-1", including a breakpoint of negative one will cause the contract to just execute one instruction.
+          required: true
+          schema:
+            $ref: '#/components/schemas/breakpointsResponse'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/breakpoints'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/breakpoints'
+
+  /programCounter:
+    get:
+      tags:
+        - Debugger
+      summary: Get Program Counter
+      description: The program counter (pc) is an offset into the bytecode (Basically an instruction pointer) for the current instruction.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/programCounter'
+    post:
+      tags:
+        - Debugger
+      summary: Set Program Counter
+      description: Set the program counter (pc). Make sure this points to a valid instruction/offset. Any offset returned by the /parseBytecode endpoint should be fine.
+      parameters:
+        - name: programCounter
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/programCounter'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/programCounter'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/programCounter'
+
+  /stack:
+    get:
+      tags:
+        - Debugger
+      summary: Get current contract's stack
+      description: Return the stack which is a list of hexstrings. Each hexstring is 32 bytes long. For simplicity, most of the internals of this EVM implementation rely on 32 byte hexstrings. The top of the stack would be the last element in the list. Internally we're just using python's .push() and .pop() functions.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/stack'
+    post:
+      tags:
+        - Debugger
+      summary: Modify the current contract's stack
+      description: Modifies any value on the stack. Keep in mind most instructions rely on values from the stack, so removing them will probably cause the contract to crash. For simplicity, most of the internals of this EVM implementation rely on 32 byte hexstrings. The top of the stack would be the last element in the list. Internally we're just using python's .push() and .pop() functions.
+      parameters:
+        - name: stack
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/stackResponse'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/stack'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/stack'
+  
+  /memory:
+    get:
+      tags:
+        - Debugger
+      summary: Get current contract's memory
+      description: Return the contract's memory which is just a python dictionary. The keys are addresses (32 byte hexstrings) and the values are 32 byte hexstrings.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/memory'
+    post:
+      tags:
+        - Debugger
+      summary: Modify the current contract's memory
+      description: Modifies the current contract's memory. The keys are addresses (32 byte hexstrings) and the values are 32 byte hexstrings.
+      parameters:
+        - name: stack
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/memoryResponse'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/memory'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/memory'
+  
+  /caller:
+    get:
+      tags:
+        - Debugger
+      summary: Get the contract's caller
+      description: This is for a special case where the contract is called by the STATICCALL instruction which isn't allowed to execute certain state modifying instructions. 99.9% of the time this should just be an empty string "". If you do want to test the EVM as if this contract is being called by STATICCALL then this value needs to be "staticcall".
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/staticcall'
+    post:
+      tags:
+        - Debugger
+      summary: Modify the current contract's memory
+      description: Modifies the contract's caller. This is for a special case where the contract is called by the STATICCALL instruction which isn't allowed to execute certain state modifying instructions. 99.9% of the time this should just be an empty string "". If you do want to test the EVM as if this contract is being called by STATICCALL then this value needs to be "staticcall".
+      parameters:
+        - name: stack
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/staticcallResponse'
+      requestBody:
+        description: _
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/staticcall'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/staticcall'
+                
+
+components:
+  schemas:
+    parseBytecode:
+      type: object
+      properties:
+        bytecode:
+          type: string
+          example: 60806040526000340361001157600080fd5b610206806100206000396000f3fe60806040526004361061001e5760003560e01c8063a30da70d14610023575b600080fd5b61002b61002d565b005b610035610106565b610070816000019067ffffffffffffffff16908167ffffffffffffffff168152505034815101815261006d816000015163ffffffff16565b50565b61007861007a565b565b600034146100bd576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100b490610181565b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff166108fc479081150290604051600060405180830381858888f19350505050158015610103573d6000803e3d6000fd5b50565b604051806020016040528061011a81525090565b6101226101a1565b565b600082825260208201905092915050565b7f646f6e742073656e642066756e64732100000000000000000000000000000000600082015250565b600061016b601083610124565b915061017682610135565b602082019050919050565b6000602082019050818103600083015261019a8161015e565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052605160045260246000fdfea26469706673582212202984a32427ae50c08b30f852a00a90f1afccf0ee5e5ceeb78f8227cdb1ec28ad64736f6c63430008110033
+    parseBytecodeResponse:
+      type: object
+      example: {'0': ['push1 80', '6080'], '2': ['push1 40', '6040'], '4': ['mstore', '52'], '5': ['push1 00', '6000']}
+    runBytecode:
+      type: object
+      properties:
+        instructions:
+          type: object
+          example: {'0': ['push1 80', '6080'], '2': ['push1 40', '6040'], '4': ['mstore', '52'], '5': ['push1 00', '6000']}
+    runBytecodeResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: revert
+        return_data:
+          type: string
+          example: 608060
+        stack:
+          type: array
+          items:
+            type: string
+            example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+        storage:
+          type: object
+          properties:
+            00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961:
+              type: string
+              example: 33045A592007D0C246EF02C2223560DA9522D0CF0F73282C79A1BC8F0BB2C237
+        memory:
+          type: object
+          properties:
+            0000000000000000000000009bbfed6889322e016e0a02ee459d306fc19545d8:
+              type: string
+              example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+        event_log:
+          type: array
+          items:
+            type: string
+            example: overflow add
+    breakpoints:
+      type: object
+      properties:
+        breakpoints:
+          type: array
+          items:
+            type: integer
+          example: [1,2,8]
+    breakpointsResponse:
+      type: array
+      items:
+        type: integer
+      example: [1,2,8]
+    programCounter:
+      type: object
+      properties:
+        programCounter:
+          type: integer
+          example: 2
+    stack:
+      type: object
+      properties:
+        stack:
+          type: array
+          items:
+            type: string
+          example: [00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961,00000000000000000000000000000000000000000000000000000000000000ff]
+    stackResponse:
+      type: array
+      items:
+        type: string
+      example: [00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961,00000000000000000000000000000000000000000000000000000000000000ff]
+    memory:
+      type: object
+      properties:
+        memory:
+          type: object
+          properties:
+            0000000000000000000000009bbfed6889322e016e0a02ee459d306fc19545d8:
+              type: string
+              example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+    memoryResponse:
+      type: object
+      properties:
+        0000000000000000000000009bbfed6889322e016e0a02ee459d306fc19545d8:
+          type: string
+          example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+    staticcall:
+      type: object
+      properties:
+        caller:
+          type: string
+          example: staticcall
+    staticcallResponse:
+      type: string
+      example: staticcall
+    globalVariables:
+      type: object
+      properties:
+        block.chainid:
+          type: string
+          example: 1
+        block.coinbase:
+          type: string
+          example: 0000000000000000000000000000000000000000000000000000000000000000
+        block.difficulty:
+          type: string
+          example: 0
+        block.gaslimit:
+          type: string
+          example: 6721975
+        block.number:
+          type: string
+          example: 144
+        block.timestamp:
+          type: string
+          example: 1675125106
+        block.hash:
+          type: string
+          example: 33045A592007D0C246EF02C2223560DA9522D0CF0F73282C79A1BC8F0BB2C237
+        msg.sender:
+          type: string
+          example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+        msg.sig:
+          type: string
+          example: 00000000000000000000000000000000000000000000000000000000a30da70d
+        msg.value:
+          type: string
+          example: 0
+        tx.origin:
+          type: string
+          example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+        calldata:
+          type: string
+          example: 0000000000000000000000000000000000000000000000000000000000000000
+        contract.address:
+          type: string
+          example: 0000000000000000000000009bbfed6889322e016e0a02ee459d306fc19545d8
+        balances:
+          type: object
+          properties:
+            0000000000000000000000009bbfed6889322e016e0a02ee459d306fc19545d8:
+              type: string
+              example: 00000000000000000000000000000000000000000000000000000000000000ff
+        bytecode:
+          type: string
+          example: 60806040526000340361001157600080fd5b610206806100206000396000f3fe60806040526004361061001e5760003560e01c8063a30da70d14610023575b600080fd5b61002b61002d565b005b610035610106565b610070816000019067ffffffffffffffff16908167ffffffffffffffff168152505034815101815261006d816000015163ffffffff16565b50565b61007861007a565b565b600034146100bd576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100b490610181565b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff166108fc479081150290604051600060405180830381858888f19350505050158015610103573d6000803e3d6000fd5b50565b604051806020016040528061011a81525090565b6101226101a1565b565b600082825260208201905092915050565b7f646f6e742073656e642066756e64732100000000000000000000000000000000600082015250565b600061016b601083610124565b915061017682610135565b602082019050919050565b6000602082019050818103600083015261019a8161015e565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052605160045260246000fdfea26469706673582212202984a32427ae50c08b30f852a00a90f1afccf0ee5e5ceeb78f8227cdb1ec28ad64736f6c63430008110033
+        gas.price:
+          type: string
+          example: 10
+        gas:
+          type: string
+          example: 1000
+        extcode:
+          type: object
+          properties:
+            0000000000000000000000009bbfed6889322e016e0a02ee459d306fc19545d8:
+              type: string
+              example: 60806040526000340361001157600080fd5b610206806100206000396000f3fe60806040526004361061001e5760003560e01c8063a30da70d14610023575b600080fd5b61002b61002d565b005b610035610106565b610070816000019067ffffffffffffffff16908167ffffffffffffffff168152505034815101815261006d816000015163ffffffff16565b50565b61007861007a565b565b600034146100bd576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100b490610181565b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff166108fc479081150290604051600060405180830381858888f19350505050158015610103573d6000803e3d6000fd5b50565b604051806020016040528061011a81525090565b6101226101a1565b565b600082825260208201905092915050565b7f646f6e742073656e642066756e64732100000000000000000000000000000000600082015250565b600061016b601083610124565b915061017682610135565b602082019050919050565b6000602082019050818103600083015261019a8161015e565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052605160045260246000fdfea26469706673582212202984a32427ae50c08b30f852a00a90f1afccf0ee5e5ceeb78f8227cdb1ec28ad64736f6c63430008110033
+        returndata:
+          type: string
+          example: 00ff
+        storage:
+          type: object
+          properties:
+            00000000000000000000000000000000000000000000000000000000000000ff:
+              type: string
+              example: 00000000000000000000000059ad9d5ddf09f2276D5a5A701d9105c3f989D961
+
