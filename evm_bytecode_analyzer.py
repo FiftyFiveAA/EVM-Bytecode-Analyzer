@@ -753,6 +753,7 @@ class EVM(evm_instructions.EVMInstructions):
 
             elif(instructions[str(pc)][0] == "callcode"):
                 # DEPRECATED
+                event_log.append([pc, "DEPRECATED instruction CALLCODE"])
                 self.call_depth += 1
 
                 # run the CALLCODE instruction
@@ -852,10 +853,15 @@ class EVM(evm_instructions.EVMInstructions):
             storage = {}
         # turn into human readable instructions
         self.instructions = self.parseBytecode(bytecode)
-        print(self.instructions)
         
         message, return_data, stack, storage, memory, event_log = self.runBytecode(pc, self.instructions, breakpoints, global_variables, stack, storage, memory)
         print(message, return_data, event_log)
+        return message, return_data, stack, storage, memory, event_log
+
+    def apiRunBytecode(self, pc, instructions, breakpoints, global_variables, stack, storage, memory):
+        self.call_depth = 0
+        message, return_data, stack, storage, memory, event_log = self.runBytecode(pc, instructions, breakpoints, global_variables, stack, storage, memory)
+        #print(message, return_data, event_log)
         return message, return_data, stack, storage, memory, event_log
 
 if(__name__ == "__main__"):
