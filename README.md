@@ -51,6 +51,12 @@ python3 evm.py
 
 ![image](https://user-images.githubusercontent.com/90160593/226202901-5773466b-716e-4589-9100-0ec6d9dff384.png)
 
+## API
+
+The API server makes it significantly easier to interact with the EVM without having to understand much of the internal code.
+
+![image](https://user-images.githubusercontent.com/90160593/226477676-e88d4be8-493f-42db-a7c3-8853b2ab69da.png)
+
 ## Software Bill of Materials
 
 Python 3rd party libs
