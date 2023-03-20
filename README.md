@@ -68,3 +68,7 @@ Python 3rd party libs
 * web3
 * binascii
 * hashlib
+
+Javascript 3rd party libs
+
+* jquery-3.6.1
