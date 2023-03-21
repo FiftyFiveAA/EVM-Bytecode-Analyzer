@@ -34,14 +34,14 @@ Most of the scripts in this repo can be ran on their own and will give you varyi
 python3 evm_bytecode_analyzer.py
 ```
 
-* **For those who would like to create their own frontend, add additional features, or just interact with an abstracted EVM: utilizing our API server is probably the way to go**
-  - We have included an **openapi.yaml** file which you can open in various tools to see details about the available API endpoints.
+* **For those who would like to create their own frontend, add additional features, or just interact with an abstracted EVM: utilizing the API server is probably the way to go**
+  - Included is an **openapi.yaml** file which you can open in various tools to see details about the available API endpoints.
 
 ```
 python3 api_server.py
 ```
 
-* **For those who would like to utilize our front end**
+* **For those who would like to utilize the front end**
 
 ```
 python3 evm.py
