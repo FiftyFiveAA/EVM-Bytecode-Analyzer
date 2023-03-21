@@ -1,5 +1,11 @@
 # EVM-Bytecode-Analyzer
 
+## Project Status [UNDER DEVELOPMENT]
+
+* **EVM Implementation**: All the instructions have been added, but most haven't been tested yet. There's probably a lot of bugs.
+* **API Server**: All endpoints implemented and have been slightly tested. Probably the most stable part of the project.
+* **Frontend**: In the very early stages
+
 ## Overview
 
 **EVM Bytecode Analyzer** is a disassembler/debugger for the Ethereum Virtual Machine (EVM). It includes a custom EVM implemented in python (evm_bytecode_analyzer.py & evm_instructions.py). This project is intended to provide an easy way to debug and find vulnerabilities in smart contracts.
