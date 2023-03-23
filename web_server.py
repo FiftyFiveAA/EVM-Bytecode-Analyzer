@@ -37,7 +37,14 @@ class handler(BaseHTTPRequestHandler):
     # to the command line
     def log_message(self, format, *args):
         return
-    
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Content-type','application/json')  # Return a json generic error message
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Headers', '*')
+        self.end_headers()  # End the headers section
+        
     # If the request is a GET request then follow this logic
     def do_GET(self):
         # Hard code valid paths
