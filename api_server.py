@@ -79,6 +79,13 @@ class handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Content-type','application/json')  # Return a json generic error message
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Headers', '*')
+        self.end_headers()  # End the headers section
+
    # If the request is a GET request then follow this logic
     def do_GET(self):
         # Hard code valid paths
@@ -95,6 +102,7 @@ class handler(BaseHTTPRequestHandler):
         if(self.path not in valid_paths):
             self.send_response(404)  # Send a 404 Forbidden
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write('''{"error":"Invalid Path"}'''.encode("utf-8"))  # write the error message
             return
@@ -105,11 +113,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps(APIServerInit.states[APIServerInit.current_state]["global_variables"]).encode("utf-8"))  # write the response
             return
@@ -120,11 +130,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"breakpoints":APIServerInit.states[APIServerInit.current_state]["breakpoints"]}).encode("utf-8"))  # write the response
             return
@@ -135,11 +147,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"pc":APIServerInit.states[APIServerInit.current_state]["pc"]}).encode("utf-8"))  # write the response
             return
@@ -150,11 +164,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"stack":APIServerInit.states[APIServerInit.current_state]["stack"]}).encode("utf-8"))  # write the response
             return
@@ -165,11 +181,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"memory":APIServerInit.states[APIServerInit.current_state]["memory"]}).encode("utf-8"))  # write the response
             return
@@ -180,11 +198,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"caller":APIServerInit.states[APIServerInit.current_state]["caller"]}).encode("utf-8"))  # write the response
             return
@@ -195,11 +215,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps(APIServerInit.states).encode("utf-8"))  # write the response
             return
@@ -210,11 +232,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"stateName":APIServerInit.current_state}).encode("utf-8"))  # write the response
             return
@@ -247,6 +271,7 @@ class handler(BaseHTTPRequestHandler):
         if(self.path not in valid_paths):
             self.send_response(404)  # Send a 404 Forbidden
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write('''{"error":"Invalid Path"}'''.encode("utf-8"))  # write the error message
             return
@@ -271,11 +296,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps(instructions).encode("utf-8"))  # write the response
             return
@@ -309,11 +336,13 @@ class handler(BaseHTTPRequestHandler):
                 print(e)
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"message":end, "return_data":return_data, "stack":stack,
                             "storage":storage, "memory":memory, "event_log":event_log}).encode("utf-8"))  # write the response
@@ -334,11 +363,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps(request_body).encode("utf-8"))  # write the response
             return
@@ -360,11 +391,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"breakpoints":breakpoints}).encode("utf-8"))  # write the response
             return
@@ -386,11 +419,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"pc":pc}).encode("utf-8"))  # write the response
             return
@@ -412,11 +447,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"stack":stack}).encode("utf-8"))  # write the response
             return
@@ -438,11 +475,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"memory":memory}).encode("utf-8"))  # write the response
             return
@@ -464,11 +503,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"caller":caller}).encode("utf-8"))  # write the response
             return
@@ -481,11 +522,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"result":"SUCCESS"}).encode("utf-8"))  # write the response
             return
@@ -507,11 +550,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"stateName":stateName}).encode("utf-8"))  # write the response
             return
@@ -533,11 +578,13 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps(request_body).encode("utf-8"))  # write the response
             return
@@ -555,6 +602,7 @@ class handler(BaseHTTPRequestHandler):
                 if(stateName not in APIServerInit.states):
                     self.send_response(400)
                     self.send_header('Content-type','application/json')  # Return a json generic error message
+                    self.send_header('Access-Control-Allow-Origin', '*')
                     self.end_headers()  # End the headers section
                     self.wfile.write('''{"error":"invalid stateName"}'''.encode("utf-8"))  # write the error message
                     return
@@ -566,6 +614,7 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
@@ -592,17 +641,19 @@ class handler(BaseHTTPRequestHandler):
             except:
                 self.send_response(400)
                 self.send_header('Content-type','application/json')  # Return a json generic error message
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()  # End the headers section
                 self.wfile.write('''{"error":"error"}'''.encode("utf-8"))  # write the error message
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"stateName":stateName}).encode("utf-8"))  # write the response
             return
            
 if(__name__ == "__main__"):
-    # run the APIServer on http127.0.0.1:12345
+    # run the APIServer on http://127.0.0.1:12345
     APIServer_thread = APIServer(12345)
     APIServer_thread.start()
     
