@@ -251,7 +251,7 @@ paths:
       summary: Modify the current contract's memory
       description: Modifies the current contract's memory. The keys are addresses (32 byte hexstrings) and the values are 32 byte hexstrings.
       parameters:
-        - name: stack
+        - name: memory
           in: query
           required: true
           schema:
