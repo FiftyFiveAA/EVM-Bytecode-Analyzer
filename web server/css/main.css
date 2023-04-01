@@ -1,111 +1,211 @@
+/* Generated CSS by https://www.w3schools.com/w3css/w3css_color_generator.asp */
+.w3-theme-l5 {color:#000 !important; background-color:#f3f3f3 !important}
+.w3-theme-l4 {color:#000 !important; background-color:#d6d6d6 !important}
+.w3-theme-l3 {color:#000 !important; background-color:#adadad !important}
+.w3-theme-l2 {color:#fff !important; background-color:#858585 !important}
+.w3-theme-l1 {color:#fff !important; background-color:#5c5c5c !important}
+.w3-theme-d1 {color:#fff !important; background-color:#2e2e2e !important}
+.w3-theme-d2 {color:#fff !important; background-color:#292929 !important}
+.w3-theme-d3 {color:#fff !important; background-color:#242424 !important}
+.w3-theme-d4 {color:#fff !important; background-color:#1f1f1f !important}
+.w3-theme-d5 {color:#fff !important; background-color:#1a1a1a !important}
+
+.w3-theme-light {color:#000 !important; background-color:#f3f3f3 !important}
+.w3-theme-dark {color:#fff !important; background-color:#1a1a1a !important}
+.w3-theme-action {color:#fff !important; background-color:#1a1a1a !important}
+
+.w3-theme {color:#fff !important; background-color:#333333 !important}
+.w3-text-theme {color:#333333 !important}
+.w3-border-theme {border-color:#333333 !important}
+
+.w3-hover-theme:hover {color:#fff !important; background-color:#333333 !important}
+.w3-hover-text-theme:hover {color:#333333 !important}
+.w3-hover-border-theme:hover {border-color:#333333 !important}
+/* End Generated CSS */
+
+body{
+  background-color: #5c5c5c;
+}
+/* Top Navigation Bar*/
 .topnav {
-  background-color: #333;
-  overflow: hidden;
   position: absolute;
+  overflow: hidden;
   top: 0;
-  left: 8%; /* set the left position to the width of the .sidebar element */
+  left: 10%; /* set the left position to the width of the .sidebar element */
   right: 0;
 }
 
-.topnav a {
-  float: left; /* make the links float to the left */
-  color: #f2f2f2; /* set the color of the links */
-  text-align: center; /* center the text within the links */
-  padding: 14px 16px; /* add some padding to the links */
-  text-decoration: none; /* remove the underline from the links */
+/* Vertical Navigation Bar*/
+.sidebar{
+  position: fixed; /* keep the sidebar in a fixed position */
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10%; /* set the width of the sidebar */
 }
-
-.topnav a:hover {
-  background-color: #ddd; /* change the background color of the links on hover */
-  color: #333; /* change the color of the links on hover */
-}
-
-.sidebar {
-    position: fixed; /* keep the sidebar in a fixed position */
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 8%; /* set the width of the sidebar */
-    background-color: #100000; /* set the background color of the sidebar */
-  }
-  
-  .sidebar ul {
-    list-style: none; /* remove the default bullet points for the list */
-    margin: 0;
-    padding: 0;
-  }
-  
-  .sidebar li {
-    margin: 10px 0; /* add some vertical space between the links */
-  }
-  
-  .sidebar li a {
-    display: block; /* make the links take up the full width of the sidebar */
-    padding: 10px; /* add some padding to the links */
-    color: #ffffff; /* set the color of the links */
-    text-decoration: none; /* remove the underline from the links */
-  }
-  
-  .sidebar li a:hover {
-    background-color: #383838; /* change the background color of the links on hover */
-  }
-
-.disassembler-items, .debugger-items {
-  height: 100%;
-  width: 100%;
-  display: hidden;
-}
-
-.disassembler-items-bytecode{
-  width: 100%;
-  height: 10%;
-  margin: 15px;
-}
-  .disassembler-items-bytecode p{
-    display: inline-block;
-  }
-  .disassembler-items-bytecode input{
-    display: inline-block;
-    margin-left: 15px;
-    padding: 5px;
-    width: 30%;
-  }
-  .disassembler-items-bytecode button{
-    display: inline-block;
-    margin-left: 15px;
-    padding: 5px;
-    margin-left: 15px;
-  }
-
-.disassembler-items-instructions{
-  width: 100%;
-  height: 100%;
-  margin: 15px;
-}
-
-.disassembler-items-instructions-table{
-  width: 50%;
+#sidebar-plus-div{
   text-align: center;
-  padding: 5px;
+  margin-top: 10px;
+}
+#sidebar-plus-popup{
+  text-align: center;
+  margin-top: 15px;
+}
+#sidebar-minus-div{
+  text-align: center;
+  margin-top: 10px;
+}
+#sidebar-minus-popup{
+  text-align: center;
+  margin-top: 15px;
 }
 
-.disassembler-items-instructions-table th, td{
-  border: 1px solid;
-  padding: 5px;
+/* Vertical Navigation Bar Buttons*/
+.btn-state{
+  width: 100%; /* make the buttons in the sidebar the full width*/
 }
 
+/* Main Content*/
 .main-content {
   position: absolute;
   top: 50px; /* adjust as needed based on your topnav height */
-  left: 8%; /* adjust as needed based on your sidebar width */
+  left: 10%; /* adjust as needed based on your sidebar width */
   right: 0; /* fill the screen to the right */
+  bottom: 0;
 
   background-color: #181818;
   color: white;
 }
 
-body{
-  background-color: #181818;
-  color: white;
-}
+/* Disassembler tab */
+  /* Disassembler tab -> Bytecode section */
+  .disassembler-items-bytecode{
+    margin: 15px;
+  }
+
+  #disassembler-items-bytecode-text{
+    width: 10%;
+  }
+
+  #disassembler-items-bytecode-input{
+    width: 100%;
+  }
+  /* END Disassembler tab -> Bytecode section*/
+
+  /* Disassembler tab -> Instruction Table section*/
+  .disassembler-items-instructions{
+    margin: 15px;
+  }
+  #disassembler-items-instructions-text{
+    margin: 10px;
+  }
+
+  #disassembler-items-instructions-table-div{
+    overflow-x: auto;
+    resize: horizontal;  /* Make the table resizeable*/
+    width: 50%;  
+  }
+
+  #disassembler-items-instructions-table{
+    table-layout: fixed;  /* Make the column widths static*/
+  }
+  /* END Disassembler tab -> Instruction Table section*/
+/* END Disassembler tab */
+
+/* Debugger Tab */
+  /* Debugger Tab -> Top row made of buttons*/
+  #debugger-items-top-button-row{
+    margin: 15px; 
+  }
+
+  /* Debugger Tab -> Instruction Table */
+  #debugger-items-instructions-div{
+    overflow-x: auto;
+    overflow-y: scroll;
+    width: 25%;
+    height: 250px;
+    display: inline-block;
+    float: left;
+  }
+
+  #debugger-items-instructions-table{
+    height: 250px;
+    overflow-y: scroll;
+    table-layout: fixed;
+  }
+  /* END Debugger Tab -> Instruction Table */
+  /* Debugger Tab -> Output */
+  #debugger-items-output-div{
+    width: 60%;
+    display: inline-block;
+    height: 250px;
+    overflow-x: auto;
+    overflow-y: scroll;
+    margin: 50px;
+    float: left;
+  }
+  #debugger-items-output-message-div{
+    width: 30%;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+  #debugger-items-output-eventlog-div{
+    width: 30%;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+  #debugger-items-output-returndata-div{
+    width: 30%;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+  /* END Debugger Tab -> Output */
+  /* Debugger Tab -> Stack/Storage/Memory */
+  #debugger-items-stack-storage-memory-div{
+    width: 90%;
+    float: left;
+    margin: 15px;
+  }
+  /* END Debugger Tab -> Stack/Storage/Memory */
+
+  /* Debugger Tab -> Global Variables table*/
+  #debugger-items-globalvariables-table{
+    table-layout: auto;
+  }
+  #debugger-items-globalvariables-div{
+    overflow-x: auto;
+    overflow-y: scroll;
+    /*margin: 10px;*/
+  }
+  #debugger-items-globalvariables-table{
+    /*height: 350px;*/
+    overflow-y: scroll;
+    width: 100%;
+    table-layout: fixed;
+  }
+  /* END Debugger Tab -> Global Variables table*/
+  /* Debugger Tab -> Stack Table*/
+  .table_label{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  #debugger-items-stack-div{
+    overflow-x: auto;
+    overflow-y: scroll;
+    width: 100%;
+    height: 350px;
+    display: inline-block;
+    margin: 10px;
+  }
+  #debugger-items-stack-table{
+    height: 350px;
+    overflow-y: scroll;
+    table-layout: fixed;
+  }
+  /* END Debugger Tab -> Stack Table*/
+/* END Debugger Tab */
