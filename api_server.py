@@ -620,6 +620,7 @@ class handler(BaseHTTPRequestHandler):
                 return
             self.send_response(200)
             self.send_header('Content-type','application/json')  # Return a json generic error message
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()  # End the headers section
             self.wfile.write(json.dumps({"stateName":stateName}).encode("utf-8"))  # write the response
             return
@@ -633,8 +634,9 @@ class handler(BaseHTTPRequestHandler):
 
                 # parse the json
                 stateName = request_body["stateName"]
-                # remove the provided state
-                APIServerInit.states.pop(stateName)
+                if(stateName != "default"):
+                    # remove the provided state
+                    APIServerInit.states.pop(stateName)
 
                 json.dumps({"stateName":stateName}).encode("utf-8")
 
