@@ -255,7 +255,7 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/memoryResponse'
+            $ref: '#/components/schemas/memory'
       requestBody:
         description: _
         content:
