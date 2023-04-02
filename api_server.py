@@ -328,10 +328,11 @@ class handler(BaseHTTPRequestHandler):
                 memory = APIServerInit.states[APIServerInit.current_state]["memory"]
                 # now actually run the bytecode
                 self.call_depth = 0
-                end, return_data, stack, storage, memory, event_log = self.evm.apiRunBytecode(pc, instructions, breakpoints, global_variables, stack, storage, memory)
+                end, return_data, stack, storage, memory, event_log, pc = self.evm.apiRunBytecode(pc, instructions, breakpoints, global_variables, stack, storage, memory)
+                APIServerInit.states[APIServerInit.current_state]["pc"] = pc
                 # make sure the response is json
                 json.dumps({"message":end, "return_data":return_data, "stack":stack,
-                            "storage":storage, "memory":memory, "event_log":event_log}).encode("utf-8")
+                            "storage":storage, "memory":memory, "event_log":event_log, "pc":pc}).encode("utf-8")
             except Exception as e:
                 print(e)
                 self.send_response(400)
