@@ -839,7 +839,7 @@ class EVM(evm_instructions.EVMInstructions):
                       "overflow exp", "SHA3 called with size > 32", "invalid jump",
                       "LOG called with size > 32", "extcodehash returns 0", "CALL failed, no bytecode at address"]
 
-        return end, return_data, stack, storage, memory, event_log
+        return end, return_data, stack, storage, memory, event_log, pc
                 
     def main(self, bytecode, pc, breakpoints, global_variables, stack, memory, caller):
         # set the call depth to 0
@@ -854,15 +854,15 @@ class EVM(evm_instructions.EVMInstructions):
         # turn into human readable instructions
         self.instructions = self.parseBytecode(bytecode)
         
-        message, return_data, stack, storage, memory, event_log = self.runBytecode(pc, self.instructions, breakpoints, global_variables, stack, storage, memory)
+        message, return_data, stack, storage, memory, event_log, pc = self.runBytecode(pc, self.instructions, breakpoints, global_variables, stack, storage, memory)
         print(message, return_data, event_log)
-        return message, return_data, stack, storage, memory, event_log
+        return message, return_data, stack, storage, memory, event_log, pc
 
     def apiRunBytecode(self, pc, instructions, breakpoints, global_variables, stack, storage, memory):
         self.call_depth = 0
-        message, return_data, stack, storage, memory, event_log = self.runBytecode(pc, instructions, breakpoints, global_variables, stack, storage, memory)
+        message, return_data, stack, storage, memory, event_log, pc = self.runBytecode(pc, instructions, breakpoints, global_variables, stack, storage, memory)
         #print(message, return_data, event_log)
-        return message, return_data, stack, storage, memory, event_log
+        return message, return_data, stack, storage, memory, event_log, pc
 
 if(__name__ == "__main__"):
     evm = EVM()
@@ -907,7 +907,7 @@ if(__name__ == "__main__"):
     # used for STATICCALL instruction
     caller = ""
             
-    message, return_data, stack, storage, memory, event_log = evm.main(bytecode, pc, breakpoints, global_variables, stack, memory, caller)
+    message, return_data, stack, storage, memory, event_log, pc = evm.main(bytecode, pc, breakpoints, global_variables, stack, memory, caller)
 
 
 
