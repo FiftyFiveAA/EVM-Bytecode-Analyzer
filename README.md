@@ -34,10 +34,10 @@ python3 -m pip install web3, requests, binascii, hashlib, threading, json
 
 Most of the scripts in this repo can be ran on their own and will give you varying levels of access to the EVM internals we've implemented.
 
-* **For those who want to interact directly with the EVM**
+* **For those who would like to utilize the front end**
 
 ```
-python3 evm_bytecode_analyzer.py
+python3 evm.py
 ```
 
 * **For those who would like to create their own frontend, add additional features, or just interact with an abstracted EVM: utilizing the API server is probably the way to go**
@@ -47,10 +47,10 @@ python3 evm_bytecode_analyzer.py
 python3 api_server.py
 ```
 
-* **For those who would like to utilize the front end**
+* **For those who want to interact directly with the EVM**
 
 ```
-python3 evm.py
+python3 evm_bytecode_analyzer.py
 ```
 
 ## Data Flow Diagram
