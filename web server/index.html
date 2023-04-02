@@ -185,9 +185,9 @@
                             // Update the globalvariable table
                             var stackTable = $("#debugger-items-stack-table tbody");
                             stackTable.empty();
-                            $.each(stack, function(slot){
+                            $.each(stack, function(key, value){
                                 var row = $("<tr>");
-                                $('<td contenteditable="true" style="word-wrap:break-word;">').text(slot).appendTo(row);
+                                $('<td contenteditable="true" style="word-wrap:break-word;">').text(value).appendTo(row);
                                 row.appendTo(stackTable);
                             });
                         },
@@ -237,7 +237,8 @@
                         contentType: 'application/json',
                         success: function(response) {
                             //console.log(response);
-                            var storage = response["storage"];
+                            var contract_addr = response["contract.address"];
+                            var storage = response["storage"][contract_addr];
                             // remove the rows from the table
                             // Update the globalvariable table
                             var storageTable = $("#debugger-items-storage-table tbody");
@@ -360,14 +361,42 @@
                     $("#sidebar-minus-popup").fadeOut();
                 });
 
-                // step button
-                $("#debugger-items-button-step").click(function(){
-
-                });
-
                 // run button
                 $("#debugger-items-button-run").click(function(){
-                    
+                    // Get the bytecode
+                    var bytecode = new Object();
+                    bytecode.bytecode = $("#disassembler-items-bytecode-input").val();
+                    // parse the bytecode
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/parseBytecode',
+                        contentType: 'application/json',
+                        data: JSON.stringify(bytecode),
+                        success: function(response) {
+                            var instructions = response;
+                            // run the bytecode
+                            $.post({
+                                url: 'http://127.0.0.1:12345/api/v1/runBytecode',
+                                contentType: 'application/json',
+                                data: JSON.stringify(instructions),
+                                success: function(response) {
+                                    var output = response;
+                                    //console.log(output);
+                                    // update the output section
+                                    $("#debugger-items-output-message-text").text(output["message"]);
+                                    $("#debugger-items-output-eventlog-text").text(output["event_log"]);
+                                    $("#debugger-items-output-returndata-text").text(output["return_data"]);
+                                    // update the rest of the UI
+                                    updateStateUI();
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error: ' + error);
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
                 });
 
                 // save button
@@ -383,6 +412,95 @@
                             console.error('Error: ' + error);
                         }
                     });
+                });
+
+                $("#debugger-items-button-clear").click(function(){
+                    // clear stack
+                    var stackObject = new Object();
+                    stackObject.stack = [];
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/stack',
+                        contentType: 'application/json',
+                        data: JSON.stringify(stackObject),
+                        success: function(response) {
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    // clear memory
+                    var memoryObject = new Object();
+                    memoryObject.memory = {};
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/memory',
+                        contentType: 'application/json',
+                        data: JSON.stringify(memoryObject),
+                        success: function(response) {
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    // clear storage
+                    $.get({
+                        url: 'http://127.0.0.1:12345/api/v1/globalVariables',
+                        contentType: 'application/json',
+                        success: function(response) {
+                            //console.log(response);
+                            var contract_addr = response["contract.address"];
+                            var globalvariables = response;
+                            globalvariables["storage"][contract_addr] = {};
+                            $.post({
+                                url: 'http://127.0.0.1:12345/api/v1/globalVariables',
+                                contentType: 'application/json',
+                                data: JSON.stringify(globalvariables),
+                                success: function(response) {
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error: ' + error);
+                                }
+                            }); 
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    // set pc to 0
+                    var newProgramCounterObject = new Object();
+                    newProgramCounterObject.pc = 0;
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/programCounter',
+                        contentType: 'application/json',
+                        data: JSON.stringify(newProgramCounterObject),
+                        success: function(response) {
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    var debuggerInstructionTableDiv = $("#debugger-items-instructions-div");
+                    var debuggerInstructionTable = $("#debugger-items-instructions-table");
+
+                    var rowIndex = debuggerInstructionTable.find("td:first-child").filter(function() {
+                        return $(this).text() === $("#debugger-items-program-counter-value").val();
+                        }).closest("tr").index();
+                    
+                    // set the scroll position to the program counter
+                    if (rowIndex !== -1) {
+                        debuggerInstructionTableDiv.scrollTop(0);  // scroll to the top of the table
+                        $headerHeight = $("#debugger-items-instructions-table th").height();
+                        $tableOffset = $("#debugger-items-instructions-table").offset().top;
+                        //console.log($headerHeight);
+                        //console.log(rowIndex);
+                        //console.log(debuggerInstructionTable.find("tr:eq(" + rowIndex + ")").offset().top);
+                        var $offset = 0;
+                        // scroll to the correct row in the table. The -15 shows a bit of the previous instruction
+                        $offset = debuggerInstructionTable.find("tr:eq(" + rowIndex + ")").offset().top - $tableOffset + $headerHeight - 15;
+                        //console.log("offset: " + $offset);
+                        debuggerInstructionTableDiv.scrollTop($offset);
+                    }
+                    // update the UI
+                    updateStateUI();
                 });
 
                 // When Breakpoints is changed
@@ -438,7 +556,9 @@
                         var rowData = {};
                         var cols = $(this).find("td");
                         var value = $(cols[0]).text();
-                        tableData.push(value);
+                        if(value !== ""){
+                            tableData.push(value);
+                        }
                     });
                     var stackObject = new Object();
                     stackObject.stack = tableData;
@@ -463,11 +583,12 @@
                         var value = $(cols[1]).text();
                         tableData[key] = value;
                     });
-                    var tableJSON = JSON.stringify(tableData);
+                    var memoryObject = new Object();
+                    memoryObject.memory = tableData;
                     $.post({
                         url: 'http://127.0.0.1:12345/api/v1/memory',
                         contentType: 'application/json',
-                        data: tableJSON,
+                        data: JSON.stringify(memoryObject),
                         success: function(response) {
                         },
                         error: function(xhr, status, error) {
@@ -490,8 +611,9 @@
                         contentType: 'application/json',
                         success: function(response) {
                             //console.log(response);
+                            var contract_addr = response["contract.address"];
                             var globalvariables = response;
-                            globalvariables["storage"] = tableData
+                            globalvariables["storage"][contract_addr] = tableData
                             $.post({
                                 url: 'http://127.0.0.1:12345/api/v1/globalVariables',
                                 contentType: 'application/json',
@@ -527,6 +649,28 @@
                                     var programCounterResponse = response;
                                     var pc = programCounterResponse["pc"];
                                     $("#debugger-items-program-counter-value").val(pc);
+                                    var debuggerInstructionTableDiv = $("#debugger-items-instructions-div");
+                                    var debuggerInstructionTable = $("#debugger-items-instructions-table");
+
+                                    var rowIndex = debuggerInstructionTable.find("td:first-child").filter(function() {
+                                        return $(this).text() === $("#debugger-items-program-counter-value").val();
+                                        }).closest("tr").index();
+                                    
+                                    // set the scroll position to the program counter
+                                    if (rowIndex !== -1) {
+                                        debuggerInstructionTableDiv.scrollTop(0);  // scroll to the top of the table
+                                        $headerHeight = $("#debugger-items-instructions-table th").height();
+                                        $tableOffset = $("#debugger-items-instructions-table").offset().top;
+                                        //console.log($headerHeight);
+                                        //console.log(rowIndex);
+                                        //console.log(debuggerInstructionTable.find("tr:eq(" + rowIndex + ")").offset().top);
+                                        var $offset = 0;
+                                        // scroll to the correct row in the table. The -15 shows a bit of the previous instruction
+                                        $offset = debuggerInstructionTable.find("tr:eq(" + rowIndex + ")").offset().top - $tableOffset + $headerHeight - 15;
+                                        //console.log("offset: " + $offset);
+                                        debuggerInstructionTableDiv.scrollTop($offset);
+                                    }
+                                    //console.log(pc);
                                     // get the breakpoints
                                     $.get({
                                         url: 'http://127.0.0.1:12345/api/v1/breakpoints',
@@ -558,9 +702,9 @@
                                                     // Update the globalvariable table
                                                     var stackTable = $("#debugger-items-stack-table tbody");
                                                     stackTable.empty();
-                                                    $.each(stack, function(slot){
+                                                    $.each(stack, function(key, value){
                                                         var row = $("<tr>");
-                                                        $('<td contenteditable="true" style="word-wrap:break-word;">').text(slot).appendTo(row);
+                                                        $('<td contenteditable="true" style="word-wrap:break-word;">').text(value).appendTo(row);
                                                         row.appendTo(stackTable);
                                                     });
                                                 },
@@ -591,7 +735,8 @@
                                                 }
                                             });
                                             // update storage
-                                            var storage = globalvariables["storage"];
+                                            var contract_addr = response["contract.address"];
+                                            var storage = globalvariables["storage"][contract_addr];
                                             // remove the rows from the table
                                             // Update the globalvariable table
                                             var storageTable = $("#debugger-items-storage-table tbody");
@@ -702,13 +847,13 @@
                         <input id="debugger-items-breakpoints-value" class="w3-input" type="text" placeholder="[0]" value="[0]"></input>
                     </div>
                     <div class="w3-container w3-cell">
-                        <button id="debugger-items-button-step" class="w3-button w3-blue-grey">Step</button>
-                    </div>
-                    <div class="w3-container w3-cell">
                         <button id="debugger-items-button-run" class="w3-button w3-blue-grey">Run</button>
                     </div>
                     <div class="w3-container w3-cell">
                         <button id="debugger-items-button-save" class="w3-button w3-indigo">Save</button>
+                    </div>
+                    <div class="w3-container w3-cell">
+                        <button id="debugger-items-button-clear" class="w3-button w3-blue-grey">Clear</button>
                     </div>
                 </div>
 
