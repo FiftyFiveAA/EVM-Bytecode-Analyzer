@@ -148,20 +148,26 @@ body{
   #debugger-items-output-message-div{
     width: 30%;
     height: 100%;
-    display: inline-block;
+    float: left;
+    display: block;
     text-align: center;
+    overflow-wrap: break-word;
   }
   #debugger-items-output-eventlog-div{
     width: 30%;
     height: 100%;
-    display: inline-block;
+    float: left;
+    display: block;
     text-align: center;
+    overflow-wrap: break-word;
   }
   #debugger-items-output-returndata-div{
     width: 30%;
     height: 100%;
-    display: inline-block;
+    float: left;
+    display: block;
     text-align: center;
+    overflow-wrap: break-word;
   }
   /* END Debugger Tab -> Output */
   /* Debugger Tab -> Stack/Storage/Memory */
@@ -208,4 +214,36 @@ body{
     table-layout: fixed;
   }
   /* END Debugger Tab -> Stack Table*/
+   /* Debugger Tab -> Memory table*/
+   #debugger-items-memory-table{
+    table-layout: auto;
+  }
+  #debugger-items-memory-div{
+    overflow-x: auto;
+    overflow-y: scroll;
+    /*margin: 10px;*/
+  }
+  #debugger-items-memory-table{
+    /*height: 350px;*/
+    overflow-y: scroll;
+    width: 100%;
+    table-layout: fixed;
+  }
+  /* END Debugger Tab -> Memory table*/
+  /* Debugger Tab -> Storage table*/
+    #debugger-items-storage-table{
+    table-layout: auto;
+  }
+  #debugger-items-storage-div{
+    overflow-x: auto;
+    overflow-y: scroll;
+    /*margin: 10px;*/
+  }
+  #debugger-items-storage-table{
+    /*height: 350px;*/
+    overflow-y: scroll;
+    width: 100%;
+    table-layout: fixed;
+  }
+  /* END Debugger Tab -> Memory table*/
 /* END Debugger Tab */
