@@ -125,7 +125,7 @@ class EVM(evm_instructions.EVMInstructions):
         breakpoints_2 = []
         
         # run the new contract
-        message, return_data_2, stack_2, storage_2, memory_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_create, stack_2, storage_2, memory_2, "")
+        message, return_data_2, stack_2, storage_2, memory_2, pc_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_create, stack_2, storage_2, memory_2, "")
         return message, end, return_data_2, stack_2, storage_2, memory_2, new_contract_addr, bytecode_read_from_memory, stack, global_variables_create, global_variables
 
     def create2(self, global_variables, stack, storage, memory):
@@ -196,7 +196,7 @@ class EVM(evm_instructions.EVMInstructions):
         breakpoints_2 = []
         
         # run the new contract
-        message, return_data_2, stack_2, storage_2, memory_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_create2, stack_2, storage_2, memory_2, "")
+        message, return_data_2, stack_2, storage_2, memory_2, pc_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_create2, stack_2, storage_2, memory_2, "")
         return message, end, return_data_2, stack_2, storage_2, memory_2, new_contract_addr, bytecode_read_from_memory, stack, global_variables_create2, global_variables
 
     def call(self, global_variables, stack, storage, memory):
@@ -286,7 +286,7 @@ class EVM(evm_instructions.EVMInstructions):
             breakpoints_2 = []
             
             # run the called contract
-            message, return_data_2, stack_2, storage_2, memory_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_call, stack_2, storage_2, memory_2, "")
+            message, return_data_2, stack_2, storage_2, memory_2, pc_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_call, stack_2, storage_2, memory_2, "")
             
             return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage_2, memory_2, address, stack, global_variables_call, global_variables
         return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage_2, memory_2, address, stack, global_variables_call, global_variables
@@ -376,7 +376,7 @@ class EVM(evm_instructions.EVMInstructions):
             breakpoints_2 = []
             
             # run the called contract
-            message, return_data_2, stack_2, storage_2, memory_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_staticcall, stack_2, storage_2, memory_2, "staticcall")
+            message, return_data_2, stack_2, storage_2, memory_2, pc_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_staticcall, stack_2, storage_2, memory_2, "staticcall")
             
             return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage_2, memory_2, address, stack, global_variables_staticcall, global_variables
         return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage_2, memory_2, address, stack, global_variables_staticcall, global_variables
@@ -466,7 +466,7 @@ class EVM(evm_instructions.EVMInstructions):
             breakpoints_2 = []
             
             # run the called contract
-            message, return_data_2, stack_2, storage, memory_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_callcode, stack_2, storage, memory_2, "")
+            message, return_data_2, stack_2, storage, memory_2, pc_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_callcode, stack_2, storage, memory_2, "")
             return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage, memory_2, address, stack, global_variables_callcode, global_variables
         return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage, memory_2, address, stack, global_variables_callcode, global_variables
 
@@ -555,7 +555,7 @@ class EVM(evm_instructions.EVMInstructions):
             breakpoints_2 = []
             
             # run the called contract
-            message, return_data_2, stack_2, storage, memory_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_delegatecall, stack_2, storage, memory_2, "")
+            message, return_data_2, stack_2, storage, memory_2, pc_2 = evm_2.main(bytecode_read_from_memory, pc_2, breakpoints_2, global_variables_delegatecall, stack_2, storage, memory_2, "")
             
             return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage, memory_2, address, stack, global_variables_delegatecall, global_variables
         return message, event, no_bytecode, retOffset, retSize, return_data_2, stack_2, storage, memory_2, address, stack, global_variables_delegatecall, global_variables
