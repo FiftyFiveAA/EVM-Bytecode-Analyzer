@@ -320,7 +320,7 @@ class handler(BaseHTTPRequestHandler):
                 global_variables = APIServerInit.states[APIServerInit.current_state]["global_variables"]
                 stack = APIServerInit.states[APIServerInit.current_state]["stack"]
                 # get the contract's storage from the global variables if it exists
-                if(global_variables["contract.address"] in global_variables["extcode"]):
+                if(global_variables["contract.address"] in global_variables["storage"]):
                     contract_addr = global_variables["contract.address"]
                     storage = global_variables["storage"][contract_addr]
                 else:
