@@ -4,7 +4,7 @@
 
 * **EVM Implementation**: All the instructions have been added, but most haven't been tested yet. There's probably a lot of bugs.
 * **API Server**: All endpoints are implemented and have been slightly tested. Probably the most stable part of the project.
-* **Frontend**: In the very early stages.
+* **Frontend**: Mostly complete.
 
 ## Overview
 
