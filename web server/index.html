@@ -503,6 +503,71 @@
                     updateStateUI();
                 });
 
+                $("#debugger-items-button-clearStackMemory").click(function(){
+                    // clear stack
+                    var stackObject = new Object();
+                    stackObject.stack = [];
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/stack',
+                        contentType: 'application/json',
+                        data: JSON.stringify(stackObject),
+                        success: function(response) {
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    // clear memory
+                    var memoryObject = new Object();
+                    memoryObject.memory = {};
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/memory',
+                        contentType: 'application/json',
+                        data: JSON.stringify(memoryObject),
+                        success: function(response) {
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    // set pc to 0
+                    var newProgramCounterObject = new Object();
+                    newProgramCounterObject.pc = 0;
+                    $.post({
+                        url: 'http://127.0.0.1:12345/api/v1/programCounter',
+                        contentType: 'application/json',
+                        data: JSON.stringify(newProgramCounterObject),
+                        success: function(response) {
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error: ' + error);
+                        }
+                    });
+                    var debuggerInstructionTableDiv = $("#debugger-items-instructions-div");
+                    var debuggerInstructionTable = $("#debugger-items-instructions-table");
+
+                    var rowIndex = debuggerInstructionTable.find("td:first-child").filter(function() {
+                        return $(this).text() === $("#debugger-items-program-counter-value").val();
+                        }).closest("tr").index();
+                    
+                    // set the scroll position to the program counter
+                    if (rowIndex !== -1) {
+                        debuggerInstructionTableDiv.scrollTop(0);  // scroll to the top of the table
+                        $headerHeight = $("#debugger-items-instructions-table th").height();
+                        $tableOffset = $("#debugger-items-instructions-table").offset().top;
+                        //console.log($headerHeight);
+                        //console.log(rowIndex);
+                        //console.log(debuggerInstructionTable.find("tr:eq(" + rowIndex + ")").offset().top);
+                        var $offset = 0;
+                        // scroll to the correct row in the table. The -15 shows a bit of the previous instruction
+                        $offset = debuggerInstructionTable.find("tr:eq(" + rowIndex + ")").offset().top - $tableOffset + $headerHeight - 15;
+                        //console.log("offset: " + $offset);
+                        debuggerInstructionTableDiv.scrollTop($offset);
+                    }
+                    // update the UI
+                    updateStateUI();
+                });
+
                 // When Breakpoints is changed
                 $("#debugger-items-breakpoints-value").on("change paste keyup select", function(){
                     try{
@@ -876,7 +941,10 @@
                         <button id="debugger-items-button-save" class="w3-button w3-indigo">Save</button>
                     </div>
                     <div class="w3-container w3-cell">
-                        <button id="debugger-items-button-clear" class="w3-button w3-blue-grey">Clear</button>
+                        <button id="debugger-items-button-clear" class="w3-button w3-blue-grey">Clear All</button>
+                    </div>
+                    <div class="w3-container w3-cell">
+                        <button id="debugger-items-button-clearStackMemory" class="w3-button w3-blue-grey">Clear Stack/Memory</button>
                     </div>
                 </div>
 
