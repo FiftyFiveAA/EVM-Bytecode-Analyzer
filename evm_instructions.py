@@ -191,7 +191,7 @@ class EVMInstructions():
             pass
         while(size > 0):
             try:
-                print(offset, memory_data, size)
+                #print(offset, memory_data, size)
                 # get the value from memory
                 if(size >= 32):
                     memory_data += memory[offset]
