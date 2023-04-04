@@ -631,6 +631,29 @@
                     });
                 });
 
+                // new stack item
+                $("#debugger-items-stack-new-button").click(function(){
+                    var stackTable = $("#debugger-items-stack-table tbody");
+                    var row = $("<tr>");
+                    $('<td contenteditable="true" style="word-wrap:break-word;">').text("").appendTo(row);
+                    row.appendTo(stackTable);
+                });
+                // new memory item
+                $("#debugger-items-memory-new-button").click(function(){
+                    var memoryTable = $("#debugger-items-memory-table tbody");
+                    var row = $("<tr>");
+                    $('<td contenteditable="true" style="word-wrap:break-word;">').text("").appendTo(row);
+                    $('<td contenteditable="true" style="word-wrap:break-word;">').text("").appendTo(row);
+                    row.appendTo(memoryTable);
+                });
+                // new storage item
+                $("#debugger-items-storage-new-button").click(function(){
+                    var storageTable = $("#debugger-items-storage-table tbody");
+                    var row = $("<tr>");
+                    $('<td contenteditable="true" style="word-wrap:break-word;">').text("").appendTo(row);
+                    $('<td contenteditable="true" style="word-wrap:break-word;">').text("").appendTo(row);
+                    row.appendTo(storageTable);
+                });
 
                 function updateStateUI(){
                     // get the bytecode, update disassembler and debugger tabs
@@ -930,6 +953,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <button id="debugger-items-stack-new-button" class="w3-button w3-blue-grey">Add Item</button>
                     </div>
                     <!-- Debugger -> Memory-->
                     <div id="debugger-items-memory-div">
@@ -947,6 +971,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <button id="debugger-items-memory-new-button" class="w3-button w3-blue-grey">Add Item</button>
                     </div>
                     <!-- Debugger -> Storage-->
                     <div id="debugger-items-storage-div">
@@ -964,6 +989,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <button id="debugger-items-storage-new-button" class="w3-button w3-blue-grey">Add Item</button>
                     </div>
                 </div>
 
