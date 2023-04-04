@@ -184,8 +184,14 @@ class EVMInstructions():
         memory_data = ""
         # read the bytes from memory
         # you may have to read from multiple addresses
+        try:
+            # make sure the offset is a hex string
+            offset = format(offset, "064x")
+        except:
+            pass
         while(size > 0):
             try:
+                print(offset, memory_data, size)
                 # get the value from memory
                 if(size >= 32):
                     memory_data += memory[offset]
@@ -208,6 +214,11 @@ class EVMInstructions():
         index = 0
         # write the bytes to memory
         # you may have to write to multiple addresses
+        try:
+            # make sure the offset is a hex string
+            offset = format(offset, "064x")
+        except:
+            pass
         while(size > 0):
             try:
                 # write 32 bytes to a memory address
@@ -216,13 +227,17 @@ class EVMInstructions():
                     memory[offset] = data[index:index+64]
                 else:
                     # move the last of the bytes into memory
-                    memory[offset] = data[index:]
+                    memory[offset] = data[index:index+(size*2)] # .zfill(64)  zero filling causes problems. calldata as an example
+                offsetvalue = int(offset, 16)
+                # read the next memory address
+                offsetvalue += 1
+                offset = format(offsetvalue, "064x")
                 # wrote 32 bytes, so subtract them
                 size -= 32
                 # this is the index into the hex string, so 32*2
                 index += 64
-            except:
-                break
+            except Exception as e:
+                print(e)
         return memory
 
     def fromHexString(self, value):
@@ -908,42 +923,7 @@ class EVMInstructions():
         size = int(size, 16)
         offset = int(offset, 16)
 
-        # if calldata is empty then just return 0s
-        if(code == ""):
-            code = "00".zfill(64)
-        else:
-            # if calldata starts w/ 0x then remove it
-            code = code.replace("0x","")
-
-            # get 32 bytes of the calldata starting at the provided offset
-            # Check if the 32 bytes extend past the end of our value
-
-            # multiply offset by 2 because it's a byte offset and we are using a hex string which is 2 characters ber byte
-            if((offset*2)+64 > len(code)):
-                code = code[(offset*2):]
-                # pad the right side w/ zeros
-                # this is just some trickiness to do that
-                code = code[::-1].zfill(64)[::-1]
-            # elif the offset is just larger than our data return 00s
-            elif((offset*2) > len(code)):
-                code = "00".zfill(64)
-            else:
-                # normal scenario
-                code = code[(offset*2):(offset*2)+64]
-
-        # just get the needed bytes of calldata
-        code = code[:(size*2)]
-
-        # copy them to memory
-        destOffset = int(destOffset, 16)
-        destOffset = format(destOffset, "064x")
-
-        # if there's stuff in the memory address
-        if(destOffset in memory.keys()):
-            # replace the first few bytes but keep the rest
-            memory[destOffset] = code + memory[destOffset][len(code):]
-        else:
-            memory[destOffset] = code
+        memory = self.writeMemory(memory, destOffset, size, code[(offset*2):])
         
         return stack, storage, memory, event
 
