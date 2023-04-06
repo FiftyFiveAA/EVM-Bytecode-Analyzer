@@ -810,11 +810,6 @@ class EVM(evm_instructions.EVMInstructions):
             current_address = global_variables["contract.address"]
             global_variables["storage"][current_address] = storage
 
-            # -1 means just break after executing one instruction
-            if(-1 in breakpoints):
-                end = "breakpoint"
-                break
-
             # if the program counter is past the last instruction then break
             if(pc > max_offset):
                 end = "tried executing past last instruction"
@@ -834,10 +829,18 @@ class EVM(evm_instructions.EVMInstructions):
             elif(event != ""):
                 print(event)
                 event_log.append([pc, event])
+                # if there's an invalid jump then stop execution
+                if(event == "invalid jump"):
+                    break
             events = ["overflow add", "overflow mul", "underflow sub", "divide by 0 returns 0",
                       "signed division by 0 returns 0", "MOD 0 returns 0", "Signed MOD 0 returns 0",
                       "overflow exp", "SHA3 called with size > 32", "invalid jump",
                       "LOG called with size > 32", "extcodehash returns 0", "CALL failed, no bytecode at address"]
+
+            # -1 means just break after executing one instruction
+            if(-1 in breakpoints):
+                end = "breakpoint"
+                break
 
         return end, return_data, stack, storage, memory, event_log, pc
                 
