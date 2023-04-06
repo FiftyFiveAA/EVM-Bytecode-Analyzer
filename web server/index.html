@@ -499,6 +499,10 @@
                         //console.log("offset: " + $offset);
                         debuggerInstructionTableDiv.scrollTop($offset);
                     }
+                    // clear the output section
+                    $("#debugger-items-output-message-text").text("");
+                    $("#debugger-items-output-eventlog-text").text("");
+                    $("#debugger-items-output-returndata-text").text("");
                     // update the UI
                     updateStateUI();
                 });
